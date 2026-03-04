@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 答案之书</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .subtitle {
+            color: #8899aa;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .book-container {
+            perspective: 1000px;
+            margin-bottom: 40px;
+        }
+
+        .book {
+            width: 350px;
+            height: 280px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+            cursor: pointer;
+        }
+
+        .book.open {
+            transform: rotateY(-15deg);
+        }
+
+        .book-cover {
+            position: absolute;
+            width: 170px;
+            height: 260px;
+            background: linear-gradient(145deg, #8B4513, #654321);
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            transition: transform 0.8s;
+            transform-origin: left center;
+        }
+
+        .book.open .book-cover {
+            transform: rotateY(-140deg);
+        }
+
+        .book-cover-text {
+            color: #d4a574;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .book-pages {
+            position: absolute;
+            width: 340px;
+            height: 250px;
+            background: #f5f0e6;
+            border-radius: 3px 12px 12px 3px;
+            box-shadow: inset 5px 0 10px rgba(0,0,0,0.1);
+            left: 10px;
+            top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .answer {
+            font-size: 1.4rem;
+            color: #333;
+            text-align: center;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .answer.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-hint {
+            position: absolute;
+            bottom: 15px;
+            color: #999;
+            font-size: 0.9rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .btn {
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .book.shake {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <a href="../" class="back-link">← 返回游戏列表</a>
+    
+    <h1>📖 答案之书</h1>
+    <p class="subtitle">心中默念你的问题，然后点击书本</p>
+    
+    <div class="book-container">
+        <div class="book" id="book" onclick="getAnswer()">
+            <div class="book-cover">
+                <div class="book-cover-text">📖<br>答案之书</div>
+            </div>
+            <div class="book-pages">
+                <div class="answer" id="answer">
+                    心中默念问题<br>点击打开答案
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" id="btn" onclick="getAnswer()">问一个问题</button>
+
+    <script>
+        const answers = [
+            "是的，去做吧！",
+            "不是，现在还不是时候",
+            "再等等，机会还没到",
+            "相信自己，你可以的！",
+            "不要犹豫，勇敢行动",
+            "慎重考虑再做决定",
+            "这是一个好主意",
+            "建议换个方向试试",
+            "命运的安排就是这样",
+            "跟着直觉走",
+            "耐心等待会有好结果",
+            "是时候改变了",
+            "保持现状也不错",
+            "你需要更多准备",
+            "机不可失，时不再来",
+            "三思而后行",
+            "随心而动",
+            "顺其自然吧",
+            "值得一试！",
+            "别着急，慢慢来",
+            "这是命中注定的",
+            "或许可以问问别人",
+            "相信你的选择",
+            "时间会给出答案",
+            "把握当下最重要",
+            "不要后悔你的决定",
+            "这是最好的选择",
+            "成败在此一举",
+            "一切都会好起来的",
+            "遵循内心深处的声音",
+            "你心里已经有答案了",
+            "是时候迈出第一步了",
+            "保持乐观的心态",
+            "失败是成功之母",
+            "不要轻易放弃"
+        ];
+
+        let isAnimating = false;
+        let lastAnswer = '';
+
+        function getAnswer() {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const book = document.getElementById('book');
+            const answer = document.getElementById('answer');
+            const btn = document.getElementById('btn');
+
+            // 随机选择一个答案（不重复）
+            let newAnswer;
+            do {
+                newAnswer = answers[Math.floor(Math.random() * answers.length)];
+            } while (newAnswer === lastAnswer && answers.length > 1);
+            lastAnswer = newAnswer;
+
+            // 书本摇晃动画
+            book.classList.add('shake');
+            setTimeout(() => book.classList.remove('shake'), 300);
+
+            // 翻书动画
+            setTimeout(() => {
+                book.classList.add('open');
+                
+                // 显示答案
+                setTimeout(() => {
+                    answer.classList.remove('show');
+                    setTimeout(() => {
+                        answer.innerHTML = newAnswer;
+                        answer.classList.add('show');
+                    }, 200);
+                }, 400);
+            }, 300);
+
+            // 按钮状态
+            btn.disabled = true;
+            btn.textContent = '再问一次';
+
+            setTimeout(() => {
+                isAnimating = false;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            const answer = document.getElementById('answer');
+            setTimeout(() => answer.classList.add('show'), 500);
+        });
+    </script>
+</body>
+</html>

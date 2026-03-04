@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏合集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+        }
+
+        .games {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #1e3a5f, #0d2137);
+            border-radius: 20px;
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: block;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #00d4ff;
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .game-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+
+        .game-title {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .game-desc {
+            color: #8899aa;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 60px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 游戏合集</h1>
+    <p class="subtitle">选择你喜欢的游戏开始玩吧！</p>
+    
+    <div class="games">
+        <a href="./whack-a-mole/" class="game-card">
+            <div class="game-icon">🐹</div>
+            <h2 class="game-title">打地鼠</h2>
+            <p class="game-desc">经典的打地鼠小游戏，看你能得多少分！</p>
+        </a>
+        
+        <a href="./answer-book/" class="game-card">
+            <div class="game-icon">📖</div>
+            <h2 class="game-title">答案之书</h2>
+            <p class="game-desc">当你犹豫不决时，让答案之书来帮你做决定！</p>
+        </a>
+    </div>
+
+    <div class="footer">
+        更多游戏陆续开发中...
+    </div>
+</body>
+</html>
