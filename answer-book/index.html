@@ -18,7 +18,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             padding: 40px 20px;
         }
 
@@ -32,96 +31,114 @@
         .subtitle {
             color: #8899aa;
             font-size: 1.1rem;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .book-container {
-            perspective: 1000px;
-            margin-bottom: 40px;
+        .input-area {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 25px;
         }
 
-        .book {
-            width: 350px;
-            height: 280px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s;
+        .question-input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .question-input::placeholder {
+            color: #8899aa;
+        }
+
+        .question-input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,0.3);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: #aaa;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .book.open {
-            transform: rotateY(-15deg);
+        .tag:hover {
+            background: rgba(102,126,234,0.3);
+            border-color: #667eea;
+            color: #fff;
         }
 
-        .book-cover {
-            position: absolute;
-            width: 170px;
-            height: 260px;
-            background: linear-gradient(145deg, #8B4513, #654321);
-            border-radius: 5px 15px 15px 5px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            transition: transform 0.8s;
-            transform-origin: left center;
+        .tag.selected {
+            background: #667eea;
+            border-color: #667eea;
+            color: #fff;
         }
 
-        .book.open .book-cover {
-            transform: rotateY(-140deg);
-        }
-
-        .book-cover-text {
-            color: #d4a574;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .book-pages {
-            position: absolute;
-            width: 340px;
-            height: 250px;
-            background: #f5f0e6;
-            border-radius: 3px 12px 12px 3px;
-            box-shadow: inset 5px 0 10px rgba(0,0,0,0.1);
-            left: 10px;
-            top: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .answer-box {
+            width: 350px;
+            min-height: 180px;
+            background: linear-gradient(145deg, #f5f0e6, #e8e0d0);
+            border-radius: 20px;
             padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content:-bottom: 30 center;
+            marginpx;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
             overflow: hidden;
         }
 
+        .answer-box::before {
+            content: '📖';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+
         .answer {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             color: #333;
             text-align: center;
             line-height: 1.8;
             opacity: 0;
-            transform: translateY(20px);
+            transform: scale(0.8);
             transition: all 0.5s ease;
         }
 
         .answer.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
         }
 
-        .question-hint {
-            position: absolute;
-            bottom: 15px;
+        .answer-hint {
             color: #999;
-            font-size: 0.9rem;
-            left: 50%;
-            transform: translateX(-50%);
+            font-size: 1rem;
         }
 
         .btn {
-            padding: 15px 50px;
+            padding: 15px 60px;
             font-size: 1.3rem;
             font-weight: bold;
             color: #fff;
@@ -166,12 +183,12 @@
         }
 
         @keyframes shake {
-            0%, 100% { transform: rotate(0); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
-        .book.shake {
+        .answer-box.shake {
             animation: shake 0.3s ease-in-out;
         }
     </style>
@@ -180,22 +197,30 @@
     <a href="../" class="back-link">← 返回游戏列表</a>
     
     <h1>📖 答案之书</h1>
-    <p class="subtitle">心中默念你的问题，然后点击书本</p>
+    <p class="subtitle">心中默念你的问题，然后点击获取答案</p>
     
-    <div class="book-container">
-        <div class="book" id="book" onclick="getAnswer()">
-            <div class="book-cover">
-                <div class="book-cover-text">📖<br>答案之书</div>
-            </div>
-            <div class="book-pages">
-                <div class="answer" id="answer">
-                    心中默念问题<br>点击打开答案
-                </div>
-            </div>
+    <div class="input-area">
+        <input type="text" class="question-input" id="questionInput" placeholder="在这里输入你的问题..." maxlength="50">
+    </div>
+
+    <div class="tags">
+        <div class="tag" onclick="selectTag(this)">我应该表白吗？</div>
+        <div class="tag" onclick="selectTag(this)">要不要辞职？</div>
+        <div class="tag" onclick="selectTag(this)">该买房吗？</div>
+        <div class="tag" onclick="selectTag(this)">要不要分手？</div>
+        <div class="tag" onclick="selectTag(this)">要去旅行吗？</div>
+        <div class="tag" onclick="selectTag(this)">要不要创业？</div>
+        <div class="tag" onclick="selectTag(this)">该学什么？</div>
+        <div class="tag" onclick="selectTag(this)">要不要跳槽？</div>
+    </div>
+
+    <div class="answer-box" id="answerBox">
+        <div class="answer" id="answer">
+            <span class="answer-hint">点击按钮获取答案</span>
         </div>
     </div>
 
-    <button class="btn" id="btn" onclick="getAnswer()">问一个问题</button>
+    <button class="btn" id="btn" onclick="getAnswer()">🔮 寻求答案</button>
 
     <script>
         const answers = [
@@ -233,43 +258,46 @@
             "是时候迈出第一步了",
             "保持乐观的心态",
             "失败是成功之母",
-            "不要轻易放弃"
+            "不要轻易放弃",
+            "听从内心的选择",
+            "现在就是最好的时机"
         ];
 
-        let isAnimating = false;
         let lastAnswer = '';
 
-        function getAnswer() {
-            if (isAnimating) return;
-            isAnimating = true;
+        function selectTag(element) {
+            // 取消其他选中状态
+            document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('selected'));
+            // 选中当前
+            element.classList.add('selected');
+            // 填入输入框
+            document.getElementById('questionInput').value = element.textContent;
+        }
 
-            const book = document.getElementById('book');
+        function getAnswer() {
+            const question = document.getElementById('questionInput').value.trim();
+            const answerBox = document.getElementById('answerBox');
             const answer = document.getElementById('answer');
             const btn = document.getElementById('btn');
 
-            // 随机选择一个答案（不重复）
+            // 摇晃动画
+            answerBox.classList.add('shake');
+            setTimeout(() => answerBox.classList.remove('shake'), 300);
+
+            // 随机选择答案（不重复）
             let newAnswer;
             do {
                 newAnswer = answers[Math.floor(Math.random() * answers.length)];
             } while (newAnswer === lastAnswer && answers.length > 1);
             lastAnswer = newAnswer;
 
-            // 书本摇晃动画
-            book.classList.add('shake');
-            setTimeout(() => book.classList.remove('shake'), 300);
-
-            // 翻书动画
+            // 显示答案
             setTimeout(() => {
-                book.classList.add('open');
-                
-                // 显示答案
+                answer.classList.remove('show');
                 setTimeout(() => {
-                    answer.classList.remove('show');
-                    setTimeout(() => {
-                        answer.innerHTML = newAnswer;
-                        answer.classList.add('show');
-                    }, 200);
-                }, 400);
+                    answer.innerHTML = newAnswer;
+                    answer.classList.add('show');
+                }, 200);
             }, 300);
 
             // 按钮状态
@@ -277,7 +305,6 @@
             btn.textContent = '再问一次';
 
             setTimeout(() => {
-                isAnimating = false;
                 btn.disabled = false;
             }, 1500);
         }
@@ -286,6 +313,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const answer = document.getElementById('answer');
             setTimeout(() => answer.classList.add('show'), 500);
+        });
+
+        // 回车也能获取答案
+        document.getElementById('questionInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getAnswer();
+            }
         });
     </script>
 </body>
